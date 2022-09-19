@@ -70,7 +70,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        JDialog f = new JDialog(this);
+        FReserva f = new FReserva(this,true);
         f.setLocation(500, 500);
         f.setSize(500,500);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
