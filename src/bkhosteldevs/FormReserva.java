@@ -5,16 +5,9 @@
  */
 package bkhosteldevs;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.KeyStroke;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 /**
  *
@@ -39,23 +32,21 @@ public class FormReserva extends javax.swing.JDialog {
         jSpinnerJornadas.setVisible(flag);
         jCheckBoxHabitaciones.setVisible(flag);
     }
-        public void añadirTooltip() {
+    
+    public void añadirTooltip() {
         Component[] componentes = this.getComponents();
-     JLabel label;
         for (Component c : componentes) {
-               System.err.println("Tipo :"+"Nombre :"+c.getName());
-               
+            System.err.println("Tipo :" + "Nombre :" + c.getName());
+            
 //            if (c.getClass().toString()=="class javax.swing.JLabel") {
 //                label=(JLabel)c;
 //                System.out.println("etiqueta guardada");
 //            }
-  
         }
     }
-
+    
     public FormReserva(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        setLayout(new FlowLayout());
         initComponents();
         buttonGroup1.add(jRButtonNA);
         buttonGroup1.add(jRButtonBuffet);
@@ -63,6 +54,8 @@ public class FormReserva extends javax.swing.JDialog {
         buttonGroup1.add(jRButtonChef);
         flagCongreso(false);
         añadirTooltip();
+        
+        setLayout(new FlowLayout());
 
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
