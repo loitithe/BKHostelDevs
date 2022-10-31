@@ -15,6 +15,9 @@ import javax.swing.JOptionPane;
  */
 public class MenuPrincipal extends javax.swing.JFrame {
 
+    FReserva f;
+    GestionDatos gd;
+
     /**
      * Creates new form MenuPrincipal
      */
@@ -32,7 +35,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        jButtonReservar = new javax.swing.JButton();
+        jButton_VerReservas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -41,10 +45,17 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Reservar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonReservar.setText("Reservar");
+        jButtonReservar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonReservarActionPerformed(evt);
+            }
+        });
+
+        jButton_VerReservas.setText("Ver Reservas");
+        jButton_VerReservas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_VerReservasActionPerformed(evt);
             }
         });
 
@@ -54,30 +65,40 @@ public class MenuPrincipal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(141, 141, 141)
-                .addComponent(jButton1)
+                .addComponent(jButtonReservar)
                 .addContainerGap(176, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jButton_VerReservas)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(207, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(jButtonReservar)
                 .addGap(68, 68, 68))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jButton_VerReservas)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReservarActionPerformed
 
-        JDialog f = new JDialog(this);
+        f = new FReserva(this, true);
         f.setLocation(500, 500);
-        f.setSize(500,500);
+        f.setSize(500, 500);
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         f.setVisible(true);
         f.setLocationRelativeTo(null);
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonReservarActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 
@@ -89,6 +110,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         }        // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosing
+
+    private void jButton_VerReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_VerReservasActionPerformed
+        // TODO add your handling code here:
+        GestionDatos.verReservas();
+
+    }//GEN-LAST:event_jButton_VerReservasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,6 +153,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonReservar;
+    private javax.swing.JButton jButton_VerReservas;
     // End of variables declaration//GEN-END:variables
 }
