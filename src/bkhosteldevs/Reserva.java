@@ -12,18 +12,17 @@ import java.util.Date;
  *
  * @author rodri
  */
-public class Reservas implements Serializable {
+public class Reserva implements Serializable {
 
-    String nombre, telefono, tipoEvento, tipoCocina;
-    Date fecha;
+    private String nombre, telefono, tipoEvento, tipoCocina;
+    private Date fecha;
+    private int numDias, plazas;
+    private boolean boolHabitaciones;
 
-    int numDias, plazas;
-    boolean boolHabitaciones;
-
-    public Reservas() {
+    public Reserva() {
     }
 
-    public Reservas(String nombre, String telefono, String tipoEvento, int plazas, String tipoCocina, Date fecha) {
+    public Reserva(String nombre, String telefono, String tipoEvento, int plazas, String tipoCocina, Date fecha) {
         this.nombre = nombre;
         this.telefono = telefono;
         this.tipoEvento = tipoEvento;
@@ -102,11 +101,8 @@ public class Reservas implements Serializable {
 
     @Override
     public String toString() {
-        if (tipoEvento.equals(FReserva.eTipoEvento.CONGRESO)) {
-            return "Reservas{" + "nombre=" + nombre + ", telefono=" + telefono + ", tipoEvento=" + tipoEvento + ", tipoCocina=" + tipoCocina + ", fecha=" + fecha + ", numero dias=" + numDias + ", plazas =" + plazas + ",Habitaciones =" + boolHabitaciones + '}';
-        } else {
-            return "Reservas{" + "nombre=" + nombre + ", telefono=" + telefono + ", tipoEvento=" + tipoEvento + ", tipoCocina=" + tipoCocina + ", fecha=" + fecha + ", plazas=" + plazas + ", boolHabitaciones=" + boolHabitaciones + '}';
-        }
+        return "Reservas{" + "nombre=" + nombre + ", telefono=" + telefono + ", tipoEvento=" + tipoEvento + ", tipoCocina=" + tipoCocina + ", fecha=" + fecha + ", numero dias=" + numDias + ", plazas =" + plazas + ",Habitaciones =" + boolHabitaciones + '}';
+
     }
 
 }

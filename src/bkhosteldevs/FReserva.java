@@ -5,15 +5,8 @@
 package bkhosteldevs;
 
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.RandomAccessFile;
-import java.nio.file.Paths;
 import java.util.Date;
+import java.util.Enumeration;
 import javax.swing.*;
 
 /**
@@ -22,34 +15,8 @@ import javax.swing.*;
  */
 public class FReserva extends javax.swing.JDialog {
 
-    public static final String RESERVAS_FILE = Paths.get("src", "docs", "reservas.dat").toString();
-
-    void crearReserva(Reservas reserva, String ruta) {
-        if (reserva != null) {
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ruta, true));
-                oos.writeObject(reserva);
-                oos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void verReservas() {
-        Reservas reserva;
-        try {
-            FileInputStream fis = new FileInputStream(RESERVAS_FILE);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            Object object = ois.readObject();
-            if (object instanceof Reservas) {
-                reserva = (Reservas) object;
-                System.out.println(reserva.toString());
-            }
-        } catch (Exception e) {
-        }
-    }
     ButtonGroup jButtonGroup;
+    GestionDatos gd;
 
     public enum eTipoEvento {
         CONGRESO, BANQUETE, JORNADA
@@ -64,7 +31,6 @@ public class FReserva extends javax.swing.JDialog {
     public static final int RET_OK = 1;
     String nombre, telefono, tipoEvento, tipoCocina;
     Date fecha;
-    Reservas reserva;
     int numDias, plazas;
     boolean boolHabitaciones;
 
@@ -88,7 +54,7 @@ public class FReserva extends javax.swing.JDialog {
         initComponents();
         this.setLayout(new FlowLayout());
         flagTipoEv(false);
-
+        
     }
 
     /**
@@ -236,17 +202,20 @@ public class FReserva extends javax.swing.JDialog {
         okButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //Esta linea me genera un error : Exception in thread "AWT-EventQueue-0" java.lang.UnsupportedOperationException: Not supported yet.
-                //  okButtonActionPerformed(evt);
+                Reserva reserva = new Reserva();
                 nombre = jTextFieldNombre.getText();
                 telefono = jFormattedTextFieldTelefono.getText();
+                tipoEvento=jComboBoxTipo.getSelectedItem().toString();
                 // tipoEvento ya se guarda en el listener del jcombobox
+                for (Enumeration e = jButtonGroup.getElements(); e.hasMoreElements();) {
+                    JRadioButton b = (JRadioButton) e.nextElement();
+                    if (b.getModel() == jButtonGroup.getSelection()) {
+                        tipoCocina = b.getText();
+                    }
+                }
                 plazas = (Integer) jSpinnerPlazas.getValue();
-                tipoCocina = jButtonGroup.getSelection().toString();
                 fecha = (Date) spinFecha.getValue();
-                System.out.println("fecha" + fecha.toString());
 
-                reserva = new Reservas(nombre, telefono, tipoEvento, plazas, tipoCocina, fecha);
                 if (jComboBoxTipo.getSelectedItem().equals(eEvento.CONGRESO)) {
                     numDias = (Integer) jSpinnerJornadas.getValue();
                     reserva.setNumDias(numDias);
@@ -255,9 +224,13 @@ public class FReserva extends javax.swing.JDialog {
                     } else {
                         reserva.setBoolHabitaciones(false);
                     }
+                } else {
+                    numDias = 0;
                 }
+                // da nullpointerException
+                reserva = new Reserva(nombre, telefono, tipoEvento, plazas, tipoCocina, fecha);
                 System.err.println(reserva.toString());
-                crearReserva(reserva, RESERVAS_FILE);
+                GestionDatos.crearReserva(reserva);
             }
         });
 

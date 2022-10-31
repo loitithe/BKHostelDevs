@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 public class MenuPrincipal extends javax.swing.JFrame {
 
     FReserva f;
+    GestionDatos gd;
 
     /**
      * Creates new form MenuPrincipal
@@ -106,13 +107,14 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (res == JOptionPane.YES_OPTION) {
             evt.getWindow().dispose();
-            
+
         }        // TODO add your handling code here:
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton_VerReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_VerReservasActionPerformed
         // TODO add your handling code here:
-      f.verReservas();
+        GestionDatos.verReservas();
+
     }//GEN-LAST:event_jButton_VerReservasActionPerformed
 
     /**
