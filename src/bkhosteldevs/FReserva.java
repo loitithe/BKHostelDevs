@@ -4,8 +4,16 @@
  */
 package bkhosteldevs;
 
-
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
+import java.nio.file.Paths;
+import java.util.Date;
 import javax.swing.*;
 
 /**
@@ -14,8 +22,51 @@ import javax.swing.*;
  */
 public class FReserva extends javax.swing.JDialog {
 
+    public static final String RESERVAS_FILE = Paths.get("src", "docs", "reservas.dat").toString();
+
+    void crearReserva(Reservas reserva, String ruta) {
+        if (reserva != null) {
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ruta, true));
+                oos.writeObject(reserva);
+                oos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void verReservas() {
+        Reservas reserva;
+        try {
+            FileInputStream fis = new FileInputStream(RESERVAS_FILE);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object object = ois.readObject();
+            if (object instanceof Reservas) {
+                reserva = (Reservas) object;
+                System.out.println(reserva.toString());
+            }
+        } catch (Exception e) {
+        }
+    }
+    ButtonGroup jButtonGroup;
+
+    public enum eTipoEvento {
+        CONGRESO, BANQUETE, JORNADA
+    }
+    eTipoEvento eEvento;
+
+    public enum eTipoCocina {
+        Chef, NA, Buffet, Carta
+    }
+    eTipoCocina eCocina = eTipoCocina.Carta;
     public static final int RET_CANCEL = 0;
     public static final int RET_OK = 1;
+    String nombre, telefono, tipoEvento, tipoCocina;
+    Date fecha;
+    Reservas reserva;
+    int numDias, plazas;
+    boolean boolHabitaciones;
 
     public void flagTipoEv(boolean flag) {
         jLabelJornadas.setEnabled(flag);
@@ -37,6 +88,7 @@ public class FReserva extends javax.swing.JDialog {
         initComponents();
         this.setLayout(new FlowLayout());
         flagTipoEv(false);
+
     }
 
     /**
@@ -51,10 +103,17 @@ public class FReserva extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabelCocina = new javax.swing.JLabel();
         jCheckBoxHabitaciones = new javax.swing.JCheckBox();
+        jButtonGroup = new ButtonGroup();
         jRButtonChef = new javax.swing.JRadioButton();
         jRButtonCarta = new javax.swing.JRadioButton();
         jRButtonBuffet = new javax.swing.JRadioButton();
         jRButtonNA = new javax.swing.JRadioButton();
+
+        jButtonGroup.add(jRButtonBuffet);
+        jButtonGroup.add(jRButtonCarta);
+        jButtonGroup.add(jRButtonChef);
+        jButtonGroup.add(jRButtonNA);
+
         jFormattedTextFieldTelefono = new javax.swing.JFormattedTextField();
         jLabelNombre = new javax.swing.JLabel();
         jLabelTelefono = new javax.swing.JLabel();
@@ -85,11 +144,11 @@ public class FReserva extends javax.swing.JDialog {
             }
         });
 
-        jRButtonChef.setText("Chef");
+        jRButtonChef.setText(eCocina.Chef.name());
         jRButtonChef.setToolTipText("Opción recomendación del chef");
         jRButtonChef.setName("jRButtonChef"); // NOI18N
 
-        jRButtonCarta.setText("Carta");
+        jRButtonCarta.setText(eCocina.Carta.name());
         jRButtonCarta.setToolTipText("Opción carta abierta");
         jRButtonCarta.setName("jRButtonCarta"); // NOI18N
         jRButtonCarta.addActionListener(new java.awt.event.ActionListener() {
@@ -98,7 +157,7 @@ public class FReserva extends javax.swing.JDialog {
             }
         });
 
-        jRButtonBuffet.setText("Buffet");
+        jRButtonBuffet.setText(eCocina.Buffet.name());
         jRButtonBuffet.setToolTipText("Buffet libre");
         jRButtonBuffet.setName("jRButtonBuffet"); // NOI18N
         jRButtonBuffet.addActionListener(new java.awt.event.ActionListener() {
@@ -107,7 +166,7 @@ public class FReserva extends javax.swing.JDialog {
             }
         });
 
-        jRButtonNA.setText("N/A");
+        jRButtonNA.setText(eCocina.NA.name());
         jRButtonNA.setToolTipText("No aplica. Sin cocina");
         jRButtonNA.setName("jRButtonNA"); // NOI18N
         jRButtonNA.addActionListener(new java.awt.event.ActionListener() {
@@ -150,7 +209,7 @@ public class FReserva extends javax.swing.JDialog {
         jLabelTipo.setToolTipText(this.getTitle());
         jLabelTipo.setName("jLabelTipo"); // NOI18N
 
-        jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Banquete", "Jornada", "Congreso"}));
+        jComboBoxTipo.setModel(new DefaultComboBoxModel(eTipoEvento.values()));
         jComboBoxTipo.setToolTipText("Elige el tipo de evento");
         jComboBoxTipo.setName("jComboBoxTipo"); // NOI18N
         jComboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
@@ -175,8 +234,30 @@ public class FReserva extends javax.swing.JDialog {
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
+
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
+                //Esta linea me genera un error : Exception in thread "AWT-EventQueue-0" java.lang.UnsupportedOperationException: Not supported yet.
+                //  okButtonActionPerformed(evt);
+                nombre = jTextFieldNombre.getText();
+                telefono = jFormattedTextFieldTelefono.getText();
+                // tipoEvento ya se guarda en el listener del jcombobox
+                plazas = (Integer) jSpinnerPlazas.getValue();
+                tipoCocina = jButtonGroup.getSelection().toString();
+                fecha = (Date) spinFecha.getValue();
+                System.out.println("fecha" + fecha.toString());
+
+                reserva = new Reservas(nombre, telefono, tipoEvento, plazas, tipoCocina, fecha);
+                if (jComboBoxTipo.getSelectedItem().equals(eEvento.CONGRESO)) {
+                    numDias = (Integer) jSpinnerJornadas.getValue();
+                    reserva.setNumDias(numDias);
+                    if (jCheckBoxHabitaciones.isSelected()) {
+                        reserva.setBoolHabitaciones(true);
+                    } else {
+                        reserva.setBoolHabitaciones(false);
+                    }
+                }
+                System.err.println(reserva.toString());
+                crearReserva(reserva, RESERVAS_FILE);
             }
         });
 
@@ -346,15 +427,17 @@ public class FReserva extends javax.swing.JDialog {
 
     private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
 
-        String tipoEvento = jComboBoxTipo.getSelectedItem().toString();
-        switch (tipoEvento) {
-            case "Congreso":
+        tipoEvento = jComboBoxTipo.getSelectedItem().toString();
+        eEvento = eEvento.valueOf(tipoEvento);
+        System.out.println("" + eEvento);
+        switch (eEvento) {
+            case CONGRESO:
                 flagTipoEv(true);
                 break;
-            case "Banquete":
+            case BANQUETE:
                 flagTipoEv(false);
                 break;
-            case "Jornada":
+            case JORNADA:
                 flagTipoEv(false);
                 break;
             default:
